@@ -1,0 +1,59 @@
+name = input('请输入你的名字：')
+print(name)
+
+f = open('game.txt')
+lines = f.readlines()
+f.close()
+scores = {}
+for l in lines:
+    s = l.split()
+    scores[s[0]] = s[1:]
+score = scores.get(name)
+
+if score is None:
+    score = [0,0,0]
+    
+game_times = int(score[0])
+min_times = int(score[1])
+total_times = int(score[2])
+
+if game_times > 0:
+    avg_times = total_times / game_times
+else:
+    avg_times = 0
+
+print('%s已经玩了%d次，最少%d次给出答案，平均%d轮猜出答案'\
+      %(name,game_times,min_times,avg_times))
+
+times = 0
+from random import randint
+num = randint(1,100)
+a=True
+while a==True:
+    times += 1
+    i = int(input('请输入一个数字（1~100）：'))
+    if i < num:
+        print('%d太小了。'%i)
+    if i > num:
+        print('%d太大了。'%i)
+    if i == num:
+        print('恭喜你，答对了！')
+        a = False
+
+game_times += 1
+total_times += times
+if game_times == 1 or min_times > times:
+    min_times = times
+
+print('total_times:',total_times)
+print('min_times:',min_times)
+print('game_times:',game_times)
+
+scores[name] = [str(game_times),str(min_times),str(total_times)]
+result = ''
+for n in scores:
+    line = n + ' '+' '.join(scores[n])+'\n'
+    result += line
+f = open('game.txt','w',encoding='gbk')
+f.write(result)
+f.close()
